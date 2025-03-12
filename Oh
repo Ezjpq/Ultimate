@@ -1,0 +1,82 @@
+local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
+
+local trueData = "a75f3a13ba854797aee409fc9848957d"
+local falseData = "768a0151cf0347faa0a57b4a0a260b07"
+
+KeyGuardLibrary.Set({
+	publicToken = "e864ca3e53954f93837c6f10a27b0894",
+	privateToken = "5df9a38d63cd4f17824a1751f773eca0",
+	trueData = trueData,
+	falseData = falseData,
+})
+
+local getkey = KeyGuardLibrary.getLink()
+
+-- Retrieve key validation results
+local responsePremium = KeyGuardLibrary.validatePremiumKey(key)
+local responseDefault = KeyGuardLibrary.validateDefaultKey(key)
+
+local Bindable = Instance.new("BindableFunction")
+
+function Bindable.OnInvoke(answer)
+    if answer == "Get Key" then
+        setclipboard(getkey) -- Replace with your actual key link
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Shinzou Scripts",
+            Text = "Key link copied to clipboard!",
+            Duration = 3
+        })
+    end
+end
+
+-- Ensure valid key for either Premium or Default users
+if responsePremium == trueData or responseDefault == trueData then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Shinzou Scripts",
+        Text = "Thank you for using! <3",
+        Duration = 3,
+        Button1 = "OK"
+    })
+
+    -- Load the external script
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ReyalFaque/RedzHub/refs/heads/main/Oh.lua"))()
+    end)
+
+    if not success then
+        warn("Failed to load external script: " .. tostring(err))
+    end
+
+    wait(2)
+
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Shinzou Scripts",
+        Text = "Thank you for using my Script!",
+        Duration = 5,
+        Button1 = "OK"
+    })
+else
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Shinzou Scripts",
+        Text = "Your Key Is Invalid.",
+        Duration = 3,
+        Button1 = "OK"
+    })
+    
+    wait(2)
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Shinzou Scripts",
+    Text = 'Click "Get Key" To Use',
+    Duration = 5,
+    Button1 = "Get Key",
+    Callback = Bindable
+})
+end
+
+--[[
+	KeyGuardLibrary.validateDefaultKey(key) - Validate key
+	KeyGuardLibrary.validatePremiumKey(key) - Validate premium key
+	KeyGuardLibrary.getService() - Get service
+	KeyGuardLibrary.getLink() - Get link
+]]
